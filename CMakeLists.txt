@@ -118,13 +118,7 @@ else ()
 endif ()
 
 if (OE_SGX)
-  if (WIN32)
-    # Building enclaves on windows is on by default but can be disabled for enclaves pre-compiled under linux
-    option(BUILD_ENCLAVES "Build ELF enclaves" ON)
-  else ()
-    set(BUILD_ENCLAVES ON)
-  endif ()
-
+  set(BUILD_ENCLAVES ON)
   if (BUILD_ENCLAVES AND WIN32)
     # Search for prerequisites
     find_program(CLANG clang)
@@ -355,7 +349,7 @@ add_subdirectory(host)
 # Tests and samples have been ported to manually include system edl files.
 # They can no longer be used when system EDL is builtin.
 if (NOT COMPILE_SYSTEM_EDL)
-  if (BUILD_TESTS)
+  if (BUILD_TESTS AND (NOT COMPONENT MATCHES OEHOSTVERIFY))
     add_subdirectory(tests)
   endif ()
 
@@ -366,9 +360,11 @@ if (NOT COMPILE_SYSTEM_EDL)
   endif ()
 endif ()
 
-add_subdirectory(tools)
+if (NOT COMPONENT MATCHES OEHOSTVERFIY)
+  add_subdirectory(tools)
+endif ()
 
-if (BUILD_ENCLAVES)
+if (BUILD_ENCLAVES AND (NOT COMPONENT MATCHES OEHOSTVERIFY))
   add_subdirectory(enclave)
   add_subdirectory(3rdparty)
   add_subdirectory(libc)
@@ -376,7 +372,7 @@ if (BUILD_ENCLAVES)
   add_subdirectory(syscall)
 endif ()
 
-if (OE_SGX)
+if (OE_SGX AND (NOT COMPONENT MATCHES OEHOSTVERIFY))
   add_subdirectory(debugger)
 endif ()
 
