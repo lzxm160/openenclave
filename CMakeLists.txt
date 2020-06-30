@@ -118,7 +118,13 @@ else ()
 endif ()
 
 if (OE_SGX)
-  set(BUILD_ENCLAVES ON)
+  if (WIN32)
+    # Building enclaves on windows is on by default but can be disabled for enclaves pre-compiled under linux
+    option(BUILD_ENCLAVES "Build ELF enclaves" ON)
+  else ()
+    set(BUILD_ENCLAVES ON)
+  endif ()
+
   if (BUILD_ENCLAVES AND WIN32)
     # Search for prerequisites
     find_program(CLANG clang)
