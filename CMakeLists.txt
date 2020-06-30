@@ -355,7 +355,7 @@ if (NOT COMPILE_SYSTEM_EDL)
 
   # Skip samples when enabling the code coverage test.
   # Otherwise, all the samples need to explicitly link against the libgcov library.
-  if (BUILD_ENCLAVES AND (NOT CODE_COVERAGE))
+  if (NOT CODE_COVERAGE)
     add_subdirectory(samples)
   endif ()
 endif ()
